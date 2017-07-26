@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onUpdateListener(float interpolator) {
                     mBitmapInfo.setCircleInterpolator(interpolator);
-                    mBitmapInfo.setMaskInterpolator(interpolator);
                     mBitmapInfo.setStatus(BitmapInfo.PRE_DOWNLOAD);
                     mBubbleTextView.setBitmapInfo(mBitmapInfo);
                 }
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             mDownloadAnimation.startInstalledAnimation(new AnimatorListener() {
                 @Override
                 public void onUpdateListener(float interpolator) {
-                    mBitmapInfo.setMaskInterpolator(interpolator);
+                    mBitmapInfo.setTransLateInterpolator(interpolator);
                     mBitmapInfo.setStatus(BitmapInfo.INSTALLED);
                     mBubbleTextView.setBitmapInfo(mBitmapInfo);
                 }

@@ -32,7 +32,7 @@ public class BitmapInfo {
     private Rect mRendererRect;
     private float mCircleRadius;
     private float mCircleSchedule;
-    private float mMaskInterpolator;
+    private float mTransLateInterpolator;
     private float mCircleInterpolator;
 
     public BitmapInfo() {
@@ -41,6 +41,7 @@ public class BitmapInfo {
     private void initConfig() {
         mCenterPoint = new Point(mRendererRect.width() / 2,mRendererRect.height() / 2);
         mCircleRadius =  Math.min(mRendererRect.width(), mRendererRect.height()) / 3;
+        mTransLateInterpolator = 1f;
     }
 
     public Bitmap createRendererBitmap() {
@@ -110,12 +111,12 @@ public class BitmapInfo {
         this.mCircleInterpolator = circleInterpolator;
     }
 
-    public float getMaskInterpolator() {
-        return mMaskInterpolator;
+    public float getTransLateInterpolator() {
+        return mTransLateInterpolator;
     }
 
-    public void setMaskInterpolator(float interpolator) {
-        this.mMaskInterpolator = interpolator;
+    public void setTransLateInterpolator(float interpolator) {
+        this.mTransLateInterpolator = interpolator;
     }
 
 

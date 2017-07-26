@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
@@ -24,8 +26,9 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
     protected Point mViewCenterPoint;
     protected float mCircleRadius;
     protected float mCircleSchedule;
-    private  float mMaskInterpolator;
+    private  float mTransLateCircleInterpolator;
     private  float mCircleInterpolator;
+    private float mTransLateCircleRadius;
 
 
 
@@ -39,20 +42,26 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
         mViewCenterPoint = bitmapInfo.getCenterPoint();
         mCanvas = new Canvas(mRendererBitmap);
         mCircleInterpolator = bitmapInfo.getCircleInterpolator();
-        mMaskInterpolator = bitmapInfo.getMaskInterpolator();
+        mTransLateCircleInterpolator = bitmapInfo.getTransLateInterpolator();
         mCircleRadius = bitmapInfo.getCircleRadius() * mCircleInterpolator;
-
+        mTransLateCircleRadius = (mCircleRadius + 10) * mTransLateCircleInterpolator;
         mCircleSchedule = -360 * ((100 - (bitmapInfo.getCircleSchedule() * 3 / 4)) / 100 );
 
     }
 
     @Override
     public Bitmap decodeBitmap() {
+        int canvasWidth = mCanvas.getWidth();
+        int canvasHeight = mCanvas.getHeight();
+        int layerId = mCanvas.saveLayer(0, 0, canvasWidth, canvasHeight, null, Canvas.ALL_SAVE_FLAG);
 
-        drawArc();
+        mCanvas.clipRect(0,0,mRendererRect.width(),mRendererRect.height());
+
         drawMaskIcon();
+        drawTransLateCircle();
+        drawArc();
 
-
+        mCanvas.restoreToCount(layerId);
         return mRendererBitmap;
     }
 
@@ -78,22 +87,29 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
 
 
     protected void drawMaskIcon() {
-        if (mMaskInterpolator <= 0) {
+        float maskInterpolator = 1f;
+        if (maskInterpolator <= 0) {
             return;
         }
-
         Matrix matrix = new Matrix();
-        matrix.postScale(mMaskInterpolator, mMaskInterpolator);
+        matrix.postScale(maskInterpolator, maskInterpolator);
         Bitmap reSizeBmp = Bitmap.createBitmap(mBitmapInfo.getMaskBitmap(),
                 sOriginalPoint.x,
                 sOriginalPoint.y,
                 mRendererRect.width(),
                 mRendererRect.height(), matrix, true);
-        Log.e("wjq","mRendererRect.width() = " + mRendererRect.width() + "mRendererRect.height() = " + mRendererRect.height());
         mDrawPaint.setColor(Color.parseColor("#191919"));
         mCanvas.drawBitmap(reSizeBmp,
-                    (int) (mRendererRect.width() * (1 - mMaskInterpolator) / 2),
-                    (int) (mRendererRect.height() * (1 - mMaskInterpolator) / 2), mDrawPaint);
+                    (int) (mRendererRect.width() * (1 - maskInterpolator) / 2),
+                    (int) (mRendererRect.height() * (1 - maskInterpolator) / 2), mDrawPaint);
+    }
+
+
+    protected void drawTransLateCircle() {
+        mDrawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        mCanvas.drawCircle(mViewCenterPoint.x, mViewCenterPoint.y, mTransLateCircleRadius,mDrawPaint);
+        mDrawPaint.setXfermode(null);
+
     }
 
 

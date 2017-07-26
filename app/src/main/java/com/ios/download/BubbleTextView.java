@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.gome.drawbitmaplib.BitmapInfo;
@@ -27,7 +26,7 @@ import com.gome.drawbitmaplib.bitmapState.BaseBitmapState;
 
 public class BubbleTextView extends TextView{
     private BitmapInfo mBitmapInfo;
-    private int mIconSize = 174;
+    private int mIconSize = 522;
 
     public BubbleTextView(Context context) {
         this(context, null);
@@ -47,7 +46,7 @@ public class BubbleTextView extends TextView{
 
 
     private void initView() {
-        setDrawableTop(R.drawable.icon);
+        setDrawableTop(R.drawable.pictures);
         this.setText("app");
     }
 
@@ -84,19 +83,17 @@ public class BubbleTextView extends TextView{
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-
-
-        Rect rect = new Rect(getScrollX() + 0 + getPaddingLeft(),
-                getScrollY() + 0 + getPaddingTop(),
-                getScrollX() + getWidth() - getPaddingRight(),
-                getScrollY() + getExtendedPaddingTop() - getCompoundDrawablePadding());
-
-        Rect rendererRect = new Rect(rect.centerX() - mIconSize / 2,
-                rect.centerY() - mIconSize / 2,
-                rect.centerX() + mIconSize / 2,
-                rect.centerY() +mIconSize / 2);
-
         if (mBitmapInfo.getStatus() == BitmapInfo.NONE) {
+            Rect rect = new Rect(getScrollX() + 0 + getPaddingLeft(),
+                    getScrollY() + 0 + getPaddingTop(),
+                    getScrollX() + getWidth() - getPaddingRight(),
+                    getScrollY() + getExtendedPaddingTop() - getCompoundDrawablePadding());
+
+            Rect rendererRect = new Rect(rect.centerX() - mIconSize / 2,
+                    rect.centerY() - mIconSize / 2,
+                    rect.centerX() + mIconSize / 2,
+                    rect.centerY() +mIconSize / 2);
+
             mBitmapInfo.setRendererRect(rendererRect);
             Bitmap maskBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.icon_mask);
             mBitmapInfo.setMaskBitmap(maskBitmap);
