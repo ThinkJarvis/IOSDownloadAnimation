@@ -1,21 +1,20 @@
 package com.ios.download;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.ios.downloadlibrary.StatusBitmap;
-import com.ios.downloadlibrary.animation.AnimatorListener;
-import com.ios.downloadlibrary.animation.DownloadAnimation;
+import com.gome.drawbitmaplib.BitmapInfo;
+import com.gome.drawbitmaplib.animation.AnimatorListener;
+import com.gome.drawbitmaplib.animation.DownloadAnimation;
+
 
 public class MainActivity extends AppCompatActivity {
     DownloadAnimation mDownloadAnimation;
     BubbleTextView mBubbleTextView;
-    StatusBitmap mStatusBitmap;
+    BitmapInfo mBitmapInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         mBubbleTextView = (BubbleTextView) findViewById(R.id.bubble_text_view);
 
-        mStatusBitmap = mBubbleTextView.getStatusBitmap();
+        mBitmapInfo = mBubbleTextView.getBitmapInfo();
 
         Button download = (Button) findViewById(R.id.download);
 
@@ -36,16 +35,16 @@ public class MainActivity extends AppCompatActivity {
                 new DownloadImageAsyncTask().execute(1000 * 2);
             }
         });
+
+
     }
 
     private class DownloadImageAsyncTask extends AsyncTask<Integer, Integer, Boolean> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.pictures);
-            mStatusBitmap.setIconBitmap(bitmap);
-            mStatusBitmap.setStatus(StatusBitmap.ICON_READY);
-            mBubbleTextView.setStatusBitmap(mStatusBitmap);
+            mBitmapInfo.setStatus(BitmapInfo.ICON_READY);
+            mBubbleTextView.setBitmapInfo(mBitmapInfo);
 
         }
 
@@ -89,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
             mDownloadAnimation.startPreDownLoadAnimation(new AnimatorListener() {
                 @Override
                 public void onUpdateListener(float interpolator) {
-                    mStatusBitmap.setCircleInterpolator(interpolator);
-                    mStatusBitmap.setMaskInterpolator(interpolator);
-                    mStatusBitmap.setStatus(StatusBitmap.PRE_DOWNLOAD);
-                    mBubbleTextView.setStatusBitmap(mStatusBitmap);
+                    mBitmapInfo.setCircleInterpolator(interpolator);
+                    mBitmapInfo.setMaskInterpolator(interpolator);
+                    mBitmapInfo.setStatus(BitmapInfo.PRE_DOWNLOAD);
+                    mBubbleTextView.setBitmapInfo(mBitmapInfo);
                 }
             });
         }
@@ -114,17 +113,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            mStatusBitmap.setCircleSchedule(values[0]);
-            mStatusBitmap.setStatus(StatusBitmap.DOWNLOADING);
-            mBubbleTextView.setStatusBitmap(mStatusBitmap);
+            mBitmapInfo.setCircleSchedule(values[0]);
+            mBitmapInfo.setStatus(BitmapInfo.DOWNLOADING);
+            mBubbleTextView.setBitmapInfo(mBitmapInfo);
 
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            mStatusBitmap.setStatus(StatusBitmap.DOWNLOADED);
-            mBubbleTextView.setStatusBitmap(mStatusBitmap);
+            mBitmapInfo.setStatus(BitmapInfo.DOWNLOADED);
+            mBubbleTextView.setBitmapInfo(mBitmapInfo);
             new InstallAsyncTask().execute(500);
         }
 
@@ -135,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mStatusBitmap.setStatus(StatusBitmap.PRE_INSTALL);
-            mBubbleTextView.setStatusBitmap(mStatusBitmap);
+            mBitmapInfo.setStatus(BitmapInfo.PRE_INSTALL);
+            mBubbleTextView.setBitmapInfo(mBitmapInfo);
         }
 
         @Override
@@ -155,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            mStatusBitmap.setCircleSchedule(values[0]);
-            mStatusBitmap.setStatus(StatusBitmap.INSTALLING);
-            mBubbleTextView.setStatusBitmap(mStatusBitmap);
+            mBitmapInfo.setCircleSchedule(values[0]);
+            mBitmapInfo.setStatus(BitmapInfo.INSTALLING);
+            mBubbleTextView.setBitmapInfo(mBitmapInfo);
         }
 
         @Override
@@ -166,13 +165,12 @@ public class MainActivity extends AppCompatActivity {
             mDownloadAnimation.startInstalledAnimation(new AnimatorListener() {
                 @Override
                 public void onUpdateListener(float interpolator) {
-                    mStatusBitmap.setMaskInterpolator(interpolator);
-                    mStatusBitmap.setStatus(StatusBitmap.INSTALLED);
-                    mBubbleTextView.setStatusBitmap(mStatusBitmap);
+                    mBitmapInfo.setMaskInterpolator(interpolator);
+                    mBitmapInfo.setStatus(BitmapInfo.INSTALLED);
+                    mBubbleTextView.setBitmapInfo(mBitmapInfo);
                 }
             });
         }
     }
-
 }
 

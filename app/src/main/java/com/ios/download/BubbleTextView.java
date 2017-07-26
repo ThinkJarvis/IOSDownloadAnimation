@@ -4,23 +4,30 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
-import com.ios.downloadlibrary.BitmapStateFactory;
-import com.ios.downloadlibrary.DecodeBitmap;
-import com.ios.downloadlibrary.StatusBitmap;
-import com.ios.downloadlibrary.bitmapState.BaseBitmapState;
+import com.gome.drawbitmaplib.BitmapInfo;
+import com.gome.drawbitmaplib.BitmapStateFactory;
+import com.gome.drawbitmaplib.DecodeBitmap;
+import com.gome.drawbitmaplib.bitmapState.BaseBitmapState;
+
 
 /**
  * Created by weijiaqi on 2017/7/22.
  */
 
 public class BubbleTextView extends TextView{
-    private StatusBitmap mStatusBitmap;
+    private BitmapInfo mBitmapInfo;
+    private int mIconSize = 174;
 
     public BubbleTextView(Context context) {
         this(context, null);
@@ -32,29 +39,26 @@ public class BubbleTextView extends TextView{
 
     public BubbleTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context);
-        mStatusBitmap = new StatusBitmap(this);
-        initMaskBitmap(mStatusBitmap);
+        initView();
+        mBitmapInfo = new BitmapInfo();
+        mBitmapInfo.setStatus(BitmapInfo.NONE);
     }
 
-    private void initMaskBitmap(StatusBitmap statusBitmap) {
-        Bitmap maskBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.icon_mask);
-        statusBitmap.setMaskBitmap(maskBitmap);
-    }
 
-    private void initView(Context context) {
+
+    private void initView() {
         setDrawableTop(R.drawable.icon);
         this.setText("app");
     }
 
 
-    public StatusBitmap getStatusBitmap() {
-        return mStatusBitmap;
+    public BitmapInfo getBitmapInfo() {
+        return mBitmapInfo;
     }
 
 
-    public void setStatusBitmap(StatusBitmap statusBitmap) {
-        mStatusBitmap = statusBitmap;
+    public void setBitmapInfo(BitmapInfo bitmapInfo) {
+        mBitmapInfo = bitmapInfo;
         postInvalidate();
     }
 
@@ -71,7 +75,7 @@ public class BubbleTextView extends TextView{
 
     private void setCompoundDrawables(Bitmap bitmap) {
         Drawable drawableTop = new BitmapDrawable(bitmap);
-        drawableTop.setBounds(0,0,bitmap.getWidth(),bitmap.getHeight());
+        drawableTop.setBounds(0,0,mIconSize,mIconSize);
         this.setCompoundDrawables(null,drawableTop,null,null);
     }
 
@@ -79,13 +83,31 @@ public class BubbleTextView extends TextView{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mStatusBitmap.getStatus() == StatusBitmap.ICON_READY) {
-            setDrawableTop(mStatusBitmap.getIconBitmap());
+
+
+
+        Rect rect = new Rect(getScrollX() + 0 + getPaddingLeft(),
+                getScrollY() + 0 + getPaddingTop(),
+                getScrollX() + getWidth() - getPaddingRight(),
+                getScrollY() + getExtendedPaddingTop() - getCompoundDrawablePadding());
+
+        Rect rendererRect = new Rect(rect.centerX() - mIconSize / 2,
+                rect.centerY() - mIconSize / 2,
+                rect.centerX() + mIconSize / 2,
+                rect.centerY() +mIconSize / 2);
+
+        if (mBitmapInfo.getStatus() == BitmapInfo.NONE) {
+            mBitmapInfo.setRendererRect(rendererRect);
+            Bitmap maskBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.icon_mask);
+            mBitmapInfo.setMaskBitmap(maskBitmap);
         }else {
-            BaseBitmapState bitmapState = BitmapStateFactory.getInstance().createBitmapState(mStatusBitmap);
+            BaseBitmapState bitmapState = BitmapStateFactory.getInstance().createBitmapState(mBitmapInfo);
             DecodeBitmap DecodeBitmap = new DecodeBitmap(bitmapState);
             if(null != DecodeBitmap.decode()) {
-                canvas.drawBitmap(DecodeBitmap.decode(), 0, 0, mStatusBitmap.getDefaultPaint());
+                Paint paint = new Paint();
+                paint.setAntiAlias(true);
+                paint.setStyle(Paint.Style.FILL);
+                canvas.drawBitmap(DecodeBitmap.decode(), getScrollX(), getScrollY(), paint);
             }
         }
 
