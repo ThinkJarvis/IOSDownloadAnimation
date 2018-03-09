@@ -1,1 +1,3 @@
-![img](https://github.com/ThinkJarvis/Download/blob/master/app/src/main/res/gif/ios.gif)
+![img](https://github.com/ThinkJarvis/IOSDownloadAnimation/blob/master/app/src/main/res/drawable/ios.gif)
+
+
