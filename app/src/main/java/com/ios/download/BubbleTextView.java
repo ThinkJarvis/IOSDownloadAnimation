@@ -26,7 +26,8 @@ import com.gome.drawbitmaplib.bitmapState.BaseBitmapState;
 
 public class BubbleTextView extends TextView{
     private BitmapInfo mBitmapInfo;
-    private int mIconSize = 522;
+    private Bitmap mMaskBitmap;
+    private int mIconSize;
 
     public BubbleTextView(Context context) {
         this(context, null);
@@ -38,6 +39,10 @@ public class BubbleTextView extends TextView{
 
     public BubbleTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mIconSize = (int) context.getResources().getDimension(R.dimen.icon_size);
+        Drawable maskDrawable = getResources().getDrawable(R.drawable.app_mask);
+        Drawable bgDrawable = getResources().getDrawable(R.drawable.bg_app);
+        mMaskBitmap= Utils.createIconBitmap(context,maskDrawable,bgDrawable);
         initView();
         mBitmapInfo = new BitmapInfo();
         mBitmapInfo.setStatus(BitmapInfo.NONE);
@@ -95,8 +100,7 @@ public class BubbleTextView extends TextView{
                     rect.centerY() +mIconSize / 2);
 
             mBitmapInfo.setRendererRect(rendererRect);
-            Bitmap maskBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.icon_mask);
-            mBitmapInfo.setMaskBitmap(maskBitmap);
+            mBitmapInfo.setMaskBitmap(mMaskBitmap);
         }else {
             BaseBitmapState bitmapState = BitmapStateFactory.getInstance().createBitmapState(mBitmapInfo);
             DecodeBitmap DecodeBitmap = new DecodeBitmap(bitmapState);

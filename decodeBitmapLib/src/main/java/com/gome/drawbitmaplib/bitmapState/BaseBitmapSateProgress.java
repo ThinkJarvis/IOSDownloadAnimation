@@ -81,7 +81,7 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
         path.lineTo(mViewCenterPoint.x, mViewCenterPoint.y);
         path.close();
 
-        mDrawPaint.setColor(Color.parseColor("#9A191919"));
+        mDrawPaint.setColor(Color.parseColor("#60373D45"));
         mCanvas.drawPath(path, mDrawPaint);
     }
 
@@ -98,7 +98,7 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
                 sOriginalPoint.y,
                 mRendererRect.width(),
                 mRendererRect.height(), matrix, true);
-        mDrawPaint.setColor(Color.parseColor("#191919"));
+        mDrawPaint.setColor(Color.parseColor("#373D45"));
         mCanvas.drawBitmap(reSizeBmp,
                     (int) (mRendererRect.width() * (1 - maskInterpolator) / 2),
                     (int) (mRendererRect.height() * (1 - maskInterpolator) / 2), mDrawPaint);
