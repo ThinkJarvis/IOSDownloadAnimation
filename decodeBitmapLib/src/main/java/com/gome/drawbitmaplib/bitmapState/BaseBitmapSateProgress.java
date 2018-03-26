@@ -4,14 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Region;
-import android.util.Log;
 
 import com.gome.drawbitmaplib.BitmapInfo;
 
@@ -26,7 +25,7 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
     protected Point mViewCenterPoint;
     protected float mCircleRadius;
     protected float mCircleSchedule;
-    private  float mTransLateCircleInterpolator;
+    protected  float mTransLateCircleInterpolator;
     private  float mCircleInterpolator;
     private float mTransLateCircleRadius;
 
@@ -81,8 +80,9 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
         path.lineTo(mViewCenterPoint.x, mViewCenterPoint.y);
         path.close();
 
-        mDrawPaint.setColor(Color.parseColor("#60373D45"));
-        mCanvas.drawPath(path, mDrawPaint);
+        Paint arcPaint = mDrawPaint;
+        arcPaint.setColor(Color.parseColor("#60373D45"));
+        mCanvas.drawPath(path, arcPaint);
     }
 
 
@@ -98,7 +98,7 @@ public class BaseBitmapSateProgress extends BaseBitmapState{
                 sOriginalPoint.y,
                 mRendererRect.width(),
                 mRendererRect.height(), matrix, true);
-        mDrawPaint.setColor(Color.parseColor("#373D45"));
+        mDrawPaint.setColor(Color.parseColor("#000000"));
         mCanvas.drawBitmap(reSizeBmp,
                     (int) (mRendererRect.width() * (1 - maskInterpolator) / 2),
                     (int) (mRendererRect.height() * (1 - maskInterpolator) / 2), mDrawPaint);

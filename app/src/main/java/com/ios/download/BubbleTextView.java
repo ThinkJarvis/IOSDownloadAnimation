@@ -44,8 +44,7 @@ public class BubbleTextView extends TextView{
         Drawable bgDrawable = getResources().getDrawable(R.drawable.bg_app);
         mMaskBitmap= Utils.createIconBitmap(context,maskDrawable,bgDrawable);
         initView();
-        mBitmapInfo = new BitmapInfo();
-        mBitmapInfo.setStatus(BitmapInfo.NONE);
+        initBitmapInfo();
     }
 
 
@@ -53,6 +52,11 @@ public class BubbleTextView extends TextView{
     private void initView() {
         setDrawableTop(R.drawable.pictures);
         this.setText("app");
+    }
+
+    private void initBitmapInfo() {
+        mBitmapInfo = new BitmapInfo();
+        mBitmapInfo.setStatus(BitmapInfo.NONE);
     }
 
 
@@ -92,7 +96,7 @@ public class BubbleTextView extends TextView{
             Rect rect = new Rect(getScrollX() + 0 + getPaddingLeft(),
                     getScrollY() + 0 + getPaddingTop(),
                     getScrollX() + getWidth() - getPaddingRight(),
-                    getScrollY() + getExtendedPaddingTop() - getCompoundDrawablePadding());
+                    getScrollY() + getCompoundPaddingTop());
 
             Rect rendererRect = new Rect(rect.centerX() - mIconSize / 2,
                     rect.centerY() - mIconSize / 2,
