@@ -20,7 +20,7 @@ public class Utils {
 
     private static final Canvas sCanvas = new Canvas();
     private static final Rect sOldBounds = new Rect();
-    static int sColors[] = { 0xffff0000, 0xff00ff00, 0xff0000ff };
+    static int sColors[] = {0xffff0000, 0xff00ff00, 0xff0000ff};
     static int sColorIndex = 0;
 
     public static Bitmap drawableToBitmap(Drawable drawable) {
@@ -82,7 +82,7 @@ public class Utils {
             int width = iconBitmapSize;
             int height = iconBitmapSize;
 
-        if (icon instanceof BitmapDrawable) {
+            if (icon instanceof BitmapDrawable) {
                 // Ensure the bitmap has a density.
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) icon;
                 Bitmap bitmap = bitmapDrawable.getBitmap();
@@ -111,12 +111,12 @@ public class Utils {
             final Canvas canvas = sCanvas;
             canvas.setBitmap(bitmap);
 
-            final int left = (textureWidth-width) / 2;
-            final int top = (textureHeight-height) / 2;
+            final int left = (textureWidth - width) / 2;
+            final int top = (textureHeight - height) / 2;
 
             sOldBounds.set(icon.getBounds());
-            icon.setBounds(left, top, left+width, top+height);
-            canvas.save(Canvas.MATRIX_SAVE_FLAG);
+            icon.setBounds(left, top, left + width, top + height);
+            canvas.save();
             icon.draw(canvas);
             canvas.restore();
             icon.setBounds(sOldBounds);
